@@ -1,0 +1,134 @@
+<html>
+<head>
+</head>
+<body>
+<script src='https://hrv.freshsales.io/web_forms/7c24a6b05ce3e0e655c52c2ba1b70225976c14bb8556294a7c24fc3261aa6190/form.js' crossorigin='anonymous' id='fs_7c24a6b05ce3e0e655c52c2ba1b70225976c14bb8556294a7c24fc3261aa6190'></script>
+			<script>	
+			function getQueryVariable(variable){
+				var query = window.location.search.substring(1)||"";
+				var vars = query.split('&');
+				for(var i=0; i<vars.length;i++){
+					var pair = vars[i].split('=');
+					if(decodeURIComponent(pair[0])==variable){
+						return decodeURIComponent(pair[1]);
+					}
+				}
+				return ''
+			}
+			var WebFormEvent = {
+				afterInstall: function() {
+
+					var iweb = WebForm.$("input[name='lead[custom_field][cf_existing_customer]']");
+					var addHtml = WebForm.$('<div class="fserv-field fserv-required fserv-field-select"> <label class="fserv-label">Chọn Tỉnh/Thành phố</label> <select name="lead[city]" class="selector_city selector-single" required><option value="" style="display:none">Chọn thành phố/Tỉnh</option><option value="Hà Nội">Hà Nội</option><option value="Hồ Chí Minh">Hồ Chí Minh</option><option value="Tỉnh thành khác">Tỉnh thành khác</option> </select></div>');
+					addHtml.insertBefore(iweb.parents('.fserv-field'));
+
+					var ibudget = WebForm.$("#myModal_haraAds input[name='lead[company][website]']");
+					var addSelect = WebForm.$('<div class="fserv-field fserv-required fserv-field-select"> <label class="fserv-label">Chi phí quảng cáo trung bình/tháng</label> <select name="lead[cf_ads_budget_monthly]" class="selector_option2 selector-single" required><option value="" style="display:none">Chi phí quảng cáo trung bình/tháng</option><option value="Less than 30M <30.000.000đ">Dưới 30M</option><option value="30M - 50M">30M - 50M</option><option value="50M - 100M">50M - 100M</option><option value="100M+">100M+</option> </select></div>');
+					addSelect.insertAfter(ibudget.parent());
+
+					WebForm.$(".fserv-field .fserv-input-text").on("click",function() {							
+						var e = jQuery(this);
+						if( e.value != '' && "hidden" != e.attr("type")){
+							e.parent().toggleClass("fserv-field-focus" )
+						}
+					});
+					WebForm.$(".fserv-field .fserv-input-text").keyup(function() {						
+						var e = jQuery(this);
+						"hidden" != e.attr("type") && e.parent().toggleClass("fserv-field-active", "" != e.val())
+					});
+					WebForm.$(".fserv-field-select .selector-single").on("change", function(){
+						if (WebForm.$(this).val() == ''){
+							WebForm.$(this).parent().removeClass('fserv-select-active')						
+						}	else{						
+							WebForm.$(this).parent().addClass('fserv-select-active')
+						}					
+					});
+
+					WebForm.$('.powered-by').attr({style:'display:none;'});
+					WebForm.$("input[name='lead[company][website]']").attr({type:'text'});
+					WebForm.$("input[name='lead[company][website]']").attr({'required':'required'});
+					WebForm.$("input[name='lead[company][website]']").parent('.fserv-field').addClass('fserv-required');	
+					WebForm.$("input[name='lead[email]']").attr({'required':'required'});
+					WebForm.$("input[name='lead[email]']").parent('.fserv-field').addClass('fserv-required');	
+
+					WebForm.$("h2.fserv-form-name").html('Đăng ký tham gia trải nghiệm HaraAds');	
+					WebForm.$('.fserv-button-submit').addClass('btn-submit-shopharaads');		
+
+				},
+				beforeSubmit: function(){
+					var utms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+					utms.forEach(function(utm) {
+						WebForm.$('<input>').attr({
+							type: 'hidden',
+							name: 'lead[custom_field][cf_' + utm + ']',  
+							value: getQueryVariable(utm)
+						}).prependTo('.fs-webform-container form');
+					});
+
+					var city = $('.selector_city').val();
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][city]',  
+						value: city,
+					}).prependTo('.fs-webform-container form');
+
+					var budget = $('.selector_option2').val();
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_ads_budget_monthly]',  
+						value: budget,
+					}).prependTo('.fs-webform-container form');
+
+
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_territory_sync]',  
+						value: 'adtech',
+					}).prependTo('.fs-webform-container form');
+
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_interested_products]',  
+						value: 'HaraAds',
+					}).prependTo('.fs-webform-container form');
+
+
+					var sync_email = WebForm.$("input[name='lead[email]']").val();
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_sync_email]',
+						value: sync_email,
+					}).prependTo('.fs-webform-container form');
+
+					var sync_firstname = WebForm.$("input[name='lead[first_name]']").val(),
+							sync_lastname = WebForm.$("input[name='lead[last_name]']").val(),
+							sync_fullname = sync_lastname + ' ' + sync_firstname ;
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_sync_full_name]',
+						value: sync_fullname,
+					}).prependTo('.fs-webform-container form');
+
+					var sync_phone = WebForm.$("input[name='lead[mobile_number]']").val();
+					WebForm.$('<input>').attr({
+						type: 'hidden',
+						name: 'lead[custom_field][cf_sync_phone]',
+						value: sync_phone,
+					}).prependTo('.fs-webform-container form');
+
+				}, 
+				afterSubmit: function(event, data, error) {							
+					if(!error) {
+						WebForm.$('.fserv-form').attr({style:'display:none;'});
+						$('.modal.fade.in').modal('hide');
+						$('.modal-succes').modal('show');
+						$(".modal-succes").on('hidden.bs.modal', function(){
+							location.reload();
+						});
+
+					}
+				}
+			}
+			</script>			
+</body>
+</html>
